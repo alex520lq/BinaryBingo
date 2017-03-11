@@ -6,10 +6,10 @@ using System.Linq;
 public class BingoBoard : MonoBehaviour {
 
     private int[][] board;
-
     public int[][] Board { get { return board; } }
 
-    public BingoBoard()
+
+    private void Awake()
     {
         board = new int[5][];
         generateNewBoard(board);
@@ -22,6 +22,11 @@ public class BingoBoard : MonoBehaviour {
         int max = board[(int)col].Max();
         return binarysearchrecursive(board[(int)col], key, min, max);
     }
+
+    //public int FindValue (int key, int col)
+    //{
+    //    return FindValue(key, col);
+    //}
 
     private static int binarysearchrecursive(int[] inputarray, int key, int min, int max)
     {
