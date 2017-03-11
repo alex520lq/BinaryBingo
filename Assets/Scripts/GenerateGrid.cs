@@ -12,16 +12,26 @@ public class GenerateGrid : MonoBehaviour
 
         GameObject master = new GameObject();
         master.name = "Bingo Board";
+        BingoBoard board = master.AddComponent<BingoBoard>();
+        GameManager manager = master.AddComponent<GameManager>();
+        manager.board = board;
 
-        for (int j = 0; j < 5; j++)
+        for (int colu = 0; colu < 5; colu++)
         {
             GameObject bingoColumn = new GameObject();
-            bingoColumn.name = "Column " + (j + 1).ToString();
+            bingoColumn.name = "Column " + (colu + 1).ToString();
             bingoColumn.transform.parent = master.transform;
 
-            for (int i = 0; i < 6; i++)
+            for (int row = 6; row > 0; row--)
             {
                 GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                if (row == 1)
+                {
+                    cube.name = "Header";
+                }
+                else
+                    cube.name = "Col " + (colu + 1).ToString() + " row " + (row - 1);
+
                 cube.transform.position = position;
                 cube.transform.localScale += new Vector3(3, 0, 3);
                 cube.transform.parent = bingoColumn.transform;
@@ -40,12 +50,41 @@ public class GenerateGrid : MonoBehaviour
                 text.color = Color.black;
                 text.anchor = TextAnchor.MiddleCenter;
                 text.transform.Rotate(Vector3.right, 90f);
+                setTextMeshRefs(colu, manager, row, text);
 
-                
                 position += new Vector3(0, 0, 5);
             }
             position.z = 0;
             position += new Vector3(5, 0, 0);
         }
+    }
+
+    private static void setTextMeshRefs(int col, GameManager manager, int row, TextMesh mesh)
+    {
+        if (row != 1 && (row - 2) >= 0)
+        {
+            switch (col)
+            {
+                case 0:
+                    manager.b_labels[row-2] = mesh;
+                    break;
+                case 1:
+                    manager.i_labels[row-2] = mesh;
+                    break;
+                case 2:
+                    manager.n_labels[row-2] = mesh;
+                    break;
+                case 3:
+                    manager.g_labels[row-2] = mesh;
+                    break;
+                case 4:
+                    manager.o_labels[row-2] = mesh;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        
     }
 }

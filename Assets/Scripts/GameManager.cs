@@ -11,16 +11,35 @@ public class GameManager : MonoBehaviour {
     public TextMesh[] g_labels = new TextMesh[5];
     public TextMesh[] o_labels = new TextMesh[5];
 
-    BingoBoard board;
+    [HideInInspector]
+    public List<TextMesh[]> textMeshes = new List<TextMesh[]>();
+
+    public struct BingoCall
+    {
+        public int index;
+        public int column;
+    }
+    Dictionary<BingoCall, TextMesh> mapping = new Dictionary<BingoCall, TextMesh>();
+    
+    public BingoBoard board;
 
     // Use this for initialization
     void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+        textMeshes.Add(b_labels);
+        textMeshes.Add(i_labels);
+        textMeshes.Add(n_labels);
+        textMeshes.Add(g_labels);
+        textMeshes.Add(o_labels);
+
+        
+        for (int col = 0; col < board.Board.Length; col++)
+        {
+            for (int row = 0; row < board.Board[col].Length; row++)
+            {
+                textMeshes[col][row].text = board.Board[col][row].ToString();
+            }
+        }
 	}
 
     public void CallBingoNumber()
@@ -32,33 +51,19 @@ public class GameManager : MonoBehaviour {
             int hitResult = board.FindValue(newNum, (BingoBoard.Column)bingoLetter);
             if (hitResult != -1)
             {
-                ColorAHit((BingoBoard.Column)bingoLetter, hitResult);
+                ColorAHit(new BingoCall() { column = bingoLetter, index = hitResult });
             }
         }
     }
 
-    private void ColorAHit(BingoBoard.Column col, int index)
+    private void ColorAHit(BingoCall call)
     {
-        switch (col)
+        TextMesh mesh = null;
+        if (mapping.TryGetValue(call, out mesh))
         {
-            case BingoBoard.Column.B:
-                b_labels[index].GetComponent<Renderer>().material.color = Color.red;
-                break;
-            case BingoBoard.Column.I:
-                i_labels[index].GetComponent<Renderer>().material.color = Color.red;
-                break;
-            case BingoBoard.Column.N:
-                n_labels[index].GetComponent<Renderer>().material.color = Color.red;
-                break;
-            case BingoBoard.Column.G:
-                g_labels[index].GetComponent<Renderer>().material.color = Color.red;
-                break;
-            case BingoBoard.Column.O:
-                o_labels[index].GetComponent<Renderer>().material.color = Color.red;
-                break;
-            default:
-                break;
+            mesh.GetComponent<Renderer>().material.color = Color.red;
         }
+        
     }
 
 
