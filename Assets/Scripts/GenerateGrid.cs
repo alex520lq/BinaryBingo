@@ -9,14 +9,21 @@ public class GenerateGrid : MonoBehaviour
     private static void generateGrid()
     {
         Vector3 position = Vector3.zero;
-        
+
+        GameObject master = new GameObject();
+
         for (int j = 0; j < 5; j++)
         {
+            GameObject bingoColumn = new GameObject();
+            bingoColumn.name = "Column " + (j + 1).ToString();
+            bingoColumn.transform.parent = master.transform;
+
             for (int i = 0; i < 6; i++)
             {
                 GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 cube.transform.position = position;
                 cube.transform.localScale += new Vector3(3, 0, 3);
+                cube.transform.parent = bingoColumn.transform;
 
                 GameObject go = new GameObject();
                 go.transform.parent = cube.transform;
