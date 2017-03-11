@@ -11,6 +11,7 @@ public class GenerateGrid : MonoBehaviour
         Vector3 position = Vector3.zero;
 
         GameObject master = new GameObject();
+        master.name = "Bingo Board";
 
         for (int j = 0; j < 5; j++)
         {
