@@ -18,9 +18,9 @@ public class BingoBoard : MonoBehaviour {
     public int FindValue(int key, Column col)
     {
         //Get min and max values for the column and then pass it in.
-        int min = board[(int)col].Min();
-        int max = board[(int)col].Max();
-        return binarysearchrecursive(board[(int)col], key, min, max);
+        //int min = board[(int)col].Min();
+        //int max = board[(int)col].Max();
+        return binarysearchrecursive(board[(int)col], key, 0, board[(int)col].Length-1);
     }
 
     //public int FindValue (int key, int col)
@@ -35,6 +35,7 @@ public class BingoBoard : MonoBehaviour {
         int mid = (min + max) / 2;
         if (key == inputarray[mid])
         {
+            Debug.Log("Found a match");
             return mid;
         }
         else if (key < inputarray[mid])

@@ -13,7 +13,7 @@ public class GenerateGrid : MonoBehaviour
         GameObject master = new GameObject();
         master.name = "Bingo Board";
         BingoBoard board = master.AddComponent<BingoBoard>();
-        GameManager manager = master.AddComponent<GameManager>();
+        BingoManager manager = master.AddComponent<BingoManager>();
         manager.board = board;
 
         for (int colu = 0; colu < 5; colu++)
@@ -59,7 +59,7 @@ public class GenerateGrid : MonoBehaviour
         }
     }
 
-    private static void setTextMeshRefs(int col, GameManager manager, int row, TextMesh mesh)
+    private static void setTextMeshRefs(int col, BingoManager manager, int row, TextMesh mesh)
     {
         if (row != 1 && (row - 2) >= 0)
         {

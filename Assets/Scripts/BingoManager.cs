@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class BingoManager : MonoBehaviour {
 
 
     public TextMesh[] b_labels = new TextMesh[5];
@@ -38,17 +38,21 @@ public class GameManager : MonoBehaviour {
             for (int row = 0; row < board.Board[col].Length; row++)
             {
                 textMeshes[col][row].text = board.Board[col][row].ToString();
+                mapping[new BingoCall() { column = col, index = row }] = textMeshes[col][row];
             }
         }
 	}
 
     public void CallBingoNumber()
     {
-        int newNum = Random.Range(1, 99);
-        int bingoLetter = Random.Range(1,5);
+        int key = Random.Range(1, 99);
+        int bingoLetter = Random.Range(0,4);
+
+        Debug.Log("Bingo info called is " + bingoLetter + " column and " + key + " row");
+
         if (board != null)
         {
-            int hitResult = board.FindValue(newNum, (BingoBoard.Column)bingoLetter);
+            int hitResult = board.FindValue(key, (BingoBoard.Column)bingoLetter);
             if (hitResult != -1)
             {
                 ColorAHit(new BingoCall() { column = bingoLetter, index = hitResult });
@@ -61,7 +65,7 @@ public class GameManager : MonoBehaviour {
         TextMesh mesh = null;
         if (mapping.TryGetValue(call, out mesh))
         {
-            mesh.GetComponent<Renderer>().material.color = Color.red;
+            mesh.transform.parent.gameObject.GetComponent<Renderer>().material.color = Color.red;
         }
         
     }
