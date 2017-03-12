@@ -11,6 +11,8 @@ public class BingoManager : MonoBehaviour {
     public TextMesh[] g_labels = new TextMesh[5];
     public TextMesh[] o_labels = new TextMesh[5];
 
+    private List<BingoCall> bingoCalls = new List<BingoCall>();
+
     [HideInInspector]
     public List<TextMesh[]> textMeshes = new List<TextMesh[]>();
 
@@ -45,8 +47,9 @@ public class BingoManager : MonoBehaviour {
 
     public void CallBingoNumber()
     {
-        int key = Random.Range(1, 99);
-        int bingoLetter = Random.Range(0,4);
+        int maxNum = board.MaxNumber;
+        int key = Random.Range(1, maxNum);
+        int bingoLetter = Random.Range(0,5);
 
         Debug.Log("Bingo info called is " + bingoLetter + " column and " + key + " row");
 
@@ -55,7 +58,17 @@ public class BingoManager : MonoBehaviour {
             int hitResult = board.FindValue(key, (BingoBoard.Column)bingoLetter);
             if (hitResult != -1)
             {
-                ColorAHit(new BingoCall() { column = bingoLetter, index = hitResult });
+                BingoCall call = new BingoCall() { column = bingoLetter, index = hitResult };
+                if (UniqueHit(call))
+                {
+                    bingoCalls.Add(call);
+                    ColorAHit(call);
+                }
+                else
+                {
+                    Debug.Log("Duplicate Detected, recalling the num");
+                    CallBingoNumber();
+                }
             }
         }
     }
@@ -70,5 +83,16 @@ public class BingoManager : MonoBehaviour {
         
     }
 
+    private bool UniqueHit(BingoCall call)
+    {
+        foreach (var item in bingoCalls)
+        {
+            if (call.column == item.column && call.index == item.index)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

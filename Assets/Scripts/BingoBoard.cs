@@ -8,6 +8,8 @@ public class BingoBoard : MonoBehaviour {
     private int[][] board;
     public int[][] Board { get { return board; } }
 
+    private int maxNum = 0;
+    public int MaxNumber {  get { return maxNum; } }
 
     private void Awake()
     {
@@ -65,6 +67,10 @@ public class BingoBoard : MonoBehaviour {
                 }
 
             }
+
+            if (maxNum < value)
+                maxNum = value;
+
             value = 1;//Reset per column
         }
     }
