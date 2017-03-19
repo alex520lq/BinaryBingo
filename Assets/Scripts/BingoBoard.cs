@@ -46,6 +46,7 @@ public class BingoBoard : MonoBehaviour {
         if (index != -1)
         {
             bingoTracker[(int)col, index] = true;
+            InvokeWin();
             return index;
         }
         else
@@ -98,6 +99,74 @@ public class BingoBoard : MonoBehaviour {
                 maxNum = value;
 
             value = 1;//Reset per column
+        }
+    }
+
+    private bool DidPlayerWinThisTurn()
+    {
+        bool diagWin = true;
+        for (int i = 0; i < bingoTracker.GetLength(0); i++)
+        {
+            for (int j = 0; j < bingoTracker.GetLength(1); j++)
+            {
+                if (i == j && bingoTracker[i,j] == false)
+                {
+                    diagWin = false;
+                }
+            }
+        }
+        if (diagWin == true) return true;
+
+        bool diagWinOpp = true;
+        for (int i = 0; i < bingoTracker.GetLength(0); i++)
+        {
+            for (int j = 0; j < bingoTracker.GetLength(1); j++)
+            {
+                if (i + j == 6 && bingoTracker[i, j] == false)
+                {
+                    diagWinOpp = false;
+                }
+            }
+        }
+        if (diagWinOpp == true) return true;
+
+        for (int j = 0; j < bingoTracker.GetLength(1); j++)
+        {
+            for (int i = 0; i < bingoTracker.GetLength(0); i++)
+            {
+                if (bingoTracker[i, j] == false)
+                {
+                    break;
+                }
+                else if (i == 4 && bingoTracker[i,j] == true)
+                {
+                    return true;
+                }
+            }
+        }
+
+        for (int j = 0; j < bingoTracker.GetLength(0); j++)
+        {
+            for (int i = 0; i < bingoTracker.GetLength(1); i++)
+            {
+                if (bingoTracker[i, j] == false)
+                {
+                    break;
+                }
+                else if (i == 4 && bingoTracker[i, j] == true)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void InvokeWin()
+    {
+        if (PlayerHasBingo != null && DidPlayerWinThisTurn())
+        {
+            PlayerHasBingo.Invoke();
         }
     }
 
