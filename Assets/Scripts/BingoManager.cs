@@ -43,7 +43,17 @@ public class BingoManager : MonoBehaviour {
                 mapping[new BingoCall() { column = col, index = row }] = textMeshes[col][row];
             }
         }
+
+        board.PlayerHasBingo += Board_PlayerHasBingo;
 	}
+
+    private void Board_PlayerHasBingo()
+    {
+        foreach (KeyValuePair<BingoCall, TextMesh> entry in mapping)
+        {
+            entry.Value.transform.parent.gameObject.GetComponent<Renderer>().material.color = Color.green;
+        }
+    }
 
     public void CallBingoNumber()
     {
