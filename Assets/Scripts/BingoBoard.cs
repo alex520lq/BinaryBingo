@@ -46,7 +46,10 @@ public class BingoBoard : MonoBehaviour {
         if (index != -1)
         {
             bingoTracker[(int)col, index] = true;
-            InvokeWin();
+            if (DidPlayerWinThisTurn())
+            {
+                InvokeWin();
+            }
             return index;
         }
         else
@@ -104,67 +107,79 @@ public class BingoBoard : MonoBehaviour {
 
     private bool DidPlayerWinThisTurn()
     {
-        bool diagWin = true;
+        
+        if (determineDiagWin() == true) return true;
+        if (determineOtherDiagWin() == true) return true;
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (determineColumWin(i) == true || determineRowWin(i) == true)
+            {
+                return true;
+            }
+        }
+        return false;
+        
+    }
+
+    private bool determineDiagWin()
+    {
         for (int i = 0; i < bingoTracker.GetLength(0); i++)
         {
             for (int j = 0; j < bingoTracker.GetLength(1); j++)
             {
-                if (i == j && bingoTracker[i,j] == false)
+                if (i == j && bingoTracker[i, j] == false)
                 {
-                    diagWin = false;
+                    return false;
                 }
             }
         }
-        if (diagWin == true) return true;
 
-        bool diagWinOpp = true;
+        return true;
+    }
+
+    private bool determineOtherDiagWin()
+    {
         for (int i = 0; i < bingoTracker.GetLength(0); i++)
         {
             for (int j = 0; j < bingoTracker.GetLength(1); j++)
             {
                 if (i + j == 6 && bingoTracker[i, j] == false)
                 {
-                    diagWinOpp = false;
+                    return false;
                 }
             }
         }
-        if (diagWinOpp == true) return true;
+        return true;
+    }
 
-        for (int j = 0; j < bingoTracker.GetLength(1); j++)
+    private bool determineColumWin(int column)
+    {
+        for (int i = 0; i < bingoTracker.GetLength(0); i++)
         {
-            for (int i = 0; i < bingoTracker.GetLength(0); i++)
+            if (bingoTracker[column,i] == false)
             {
-                if (bingoTracker[i, j] == false)
-                {
-                    break;
-                }
-                else if (i == 4 && bingoTracker[i,j] == true)
-                {
-                    return true;
-                }
+                return false;
             }
         }
+        return true;
+    }
 
-        for (int j = 0; j < bingoTracker.GetLength(0); j++)
+    private bool determineRowWin(int row)
+    {
+        for (int i = 0; i < bingoTracker.GetLength(1); i++)
         {
-            for (int i = 0; i < bingoTracker.GetLength(1); i++)
+            if (bingoTracker[i, row] == false)
             {
-                if (bingoTracker[i, j] == false)
-                {
-                    break;
-                }
-                else if (i == 4 && bingoTracker[i, j] == true)
-                {
-                    return true;
-                }
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     private void InvokeWin()
     {
-        if (PlayerHasBingo != null && DidPlayerWinThisTurn())
+        if (PlayerHasBingo != null)
         {
             PlayerHasBingo.Invoke();
         }
