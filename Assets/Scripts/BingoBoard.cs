@@ -5,21 +5,55 @@ using System.Linq;
 
 public class BingoBoard : MonoBehaviour {
 
+    public delegate void playerHasBingo();
+    public event playerHasBingo PlayerHasBingo;
+
     private int[][] board;
     public int[][] Board { get { return board; } }
 
     private int maxNum = 0;
     public int MaxNumber {  get { return maxNum; } }
 
+    private bool[,] bingoTracker;
+    public bool[,] BingoTracker { get { return bingoTracker; } }
+
     private void Awake()
     {
         board = new int[5][];
         generateNewBoard(board);
+        initializeBingoTracking();
+    }
+
+    private void initializeBingoTracking()
+    {
+        bingoTracker = new bool[5,5];
+        for (int i = 0; i < bingoTracker.GetLength(0); i++)
+        {
+            for (int j = 0; j < bingoTracker.GetLength(1); j++)
+            {
+                if (i ==2 && j == 2)
+                {
+                    bingoTracker[i, j] = true;
+                }
+                bingoTracker[i, j] = false;
+            }
+        }
     }
 
     public int FindValue(int key, Column col)
     {
-        return binarysearchrecursive(board[(int)col], key, 0, board[(int)col].Length-1);
+        int index = binarysearchrecursive(board[(int)col], key, 0, board[(int)col].Length-1);
+        if (index != -1)
+        {
+            bingoTracker[(int)col, index] = true;
+            return index;
+        }
+        else
+        {
+            return index;
+        }
+
+        
     }
     
     private static int binarysearchrecursive(int[] inputarray, int key, int min, int max)
