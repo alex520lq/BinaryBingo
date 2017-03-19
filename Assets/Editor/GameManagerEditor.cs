@@ -13,7 +13,7 @@ public class GameManagerEditor : Editor
 
         BingoManager manager = target as BingoManager;
 
-        if (GUILayout.Button("Build Object"))
+        if (GUILayout.Button("Call Bingo Number"))
         {
             manager.CallBingoNumber();
         }
